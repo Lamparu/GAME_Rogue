@@ -19,7 +19,7 @@ Dungeon & Dungeon::setFloors(vector<Floor> &newfloors)
 
 Dungeon & Dungeon::setCurFloor(int newfl)
 {
-	if (newfl - 1 < 0 || newfl - 1 >= getFloors().size())
+	if (newfl < 0 || newfl >= getFloors().size())
 		throw std::exception("Num floor out of range");
 	curfl = newfl;
 	return *this;
@@ -48,7 +48,7 @@ Dungeon::Dungeon(Hero* you, Floor & onefloor)
 
 Square & Floor::getSChange(int x, int y)
 {
-	if (x < 0 || y < 0 || x >= MAX_X || y >= MAX_Y)
+	if (x < 0 || y < 0 || x >= squares.size() || y >= squares.size())
 		throw std::exception("Out of map");
 	return *squares[y][x];
 }
@@ -265,7 +265,7 @@ Square * Stair::go(Dungeon &dg)
 	}
 	if (getState() == upwards)
 	{
-		if (dg.getCurFloor() - 1 < 1)
+		if (dg.getCurFloor() - 1 < 0)
 			throw std::exception("No more floors up");
 		dg.setCurFloor(dg.getCurFloor() - 1);
 		X = getX();

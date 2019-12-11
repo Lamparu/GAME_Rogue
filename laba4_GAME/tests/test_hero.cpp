@@ -26,7 +26,7 @@ TEST(HeroConstructors, ConstructorDefault)
 		EXPECT_EQ(it->first, nit->first);
 		EXPECT_EQ(it->second.first, nit->second);
 		if (it->first == "STAM" || it->first == "MAX STAM")
-			ASSERT_EQ(it->second.second,MAXSTAM);
+			ASSERT_EQ(it->second.second, MAXSTAM);
 		if (it->first == "HP" || it->first == "MAX HP")
 			ASSERT_EQ(it->second.second, MAXHP);
 		if (it->first != "STAM" && it->first != "HP" && it->first != "MAX HP" && it->first != "MAX STAM")
@@ -52,7 +52,7 @@ TEST(HeroConstructors, ConstructorName)
 	Hero test("GLEB");
 
 	auto stats = test.getAllCharacter();
-	EXPECT_EQ(test.getPlayName(),"GLEB");
+	EXPECT_EQ(test.getPlayName(), "GLEB");
 	ASSERT_EQ(test.getXP(), 0);
 	ASSERT_EQ(stats.size(), Nchar);
 	auto nit = chars.begin();
@@ -94,7 +94,7 @@ TEST(HeroConstructors, ConstructorFull)
 	map<string, Armor*> nar = { { "Head", &defhelmet } };
 	vector<Potion> npt;
 	Weapon nwp("Enchanced usual", 10, 15, { "Wolf", 5 });
-	Hero test("GLEB", nstats, nar,2 , npt, &nwp, 10, 2, 1, 2);
+	Hero test("GLEB", nstats, nar, 2, npt, &nwp, 10, 2, 1, 2);
 
 	auto stats = test.getAllCharacter();
 	auto plar = test.getArmor();
@@ -145,9 +145,9 @@ TEST(HeroSetters, changeCharac)
 {
 	Hero test;
 	ASSERT_ANY_THROW(test.changeCharac("BE", 99));
-	ASSERT_ANY_THROW(test.changeCharac("HP", MAXHP+100));
+	ASSERT_ANY_THROW(test.changeCharac("HP", MAXHP + 100));
 	ASSERT_ANY_THROW(test.changeCharac("HP", -3));
-	ASSERT_ANY_THROW(test.changeCharac("STAM", MAXSTAM+200));
+	ASSERT_ANY_THROW(test.changeCharac("STAM", MAXSTAM + 200));
 	test.changeCharac("STAM", 88);
 	ASSERT_EQ(test.getOneCharac("STAM"), 88);
 }
@@ -185,7 +185,7 @@ TEST(HeroSetters, setWeapon)
 	Weapon sword("Enchanced usual", 10, 15, { "Wolf", 5 });
 	Weapon arms;
 	Hero test;
-	
+
 	test.setWeapon(&sword);
 	Weapon* nwp = test.getWeapon();
 	EXPECT_EQ(nwp->getName(), sword.getName());
@@ -232,8 +232,8 @@ TEST(HeroSetters, setPlayName)
 TEST(HeroSetters, setCoordinates)
 {
 	Hero test;
-	ASSERT_ANY_THROW(test.setCoordinates(MAX_X+1, MAX_Y-1));
-	ASSERT_ANY_THROW(test.setCoordinates(MAX_X-1, MAX_Y+1));
+	ASSERT_ANY_THROW(test.setCoordinates(MAX_X + 1, MAX_Y - 1));
+	ASSERT_ANY_THROW(test.setCoordinates(MAX_X - 1, MAX_Y + 1));
 	test.setCoordinates(MAX_X - 1, MAX_Y - 1);
 	ASSERT_EQ(test.getPosition().x, MAX_X - 1);
 	ASSERT_EQ(test.getPosition().y, MAX_Y - 1);
@@ -246,10 +246,163 @@ TEST(HeroSetters, setCoordinates)
 	ASSERT_ANY_THROW(test.setCoordinates({ MAX_X - 1, MAX_Y + 1 }));
 }
 
+TEST(HeroSetters, setPotionOne)
+{
+	Hero test;
+	Potion pt1("Health potion", { "MAX HP", 10 }, 5);
+	Potion pt2("Breaking up", { "BR", 10 }, 10);
+
+	test.setPotion(pt1);
+	ASSERT_EQ(test.getPotion().size(), 1);
+	EXPECT_EQ(test.getPotion()[0].getName(), "Health potion");
+
+	test.setPotion(pt2);
+	ASSERT_EQ(test.getPotion().size(), 2);
+	EXPECT_EQ(test.getPotion()[0].getName(), "Health potion");
+	EXPECT_EQ(test.getPotion()[1].getName(), "Breaking up");
+
+	ASSERT_ANY_THROW(test.setPotion(pt1));
+}
+
+TEST(HeroSetters, setPotionMany)
+{
+	Hero test;
+	Potion pt1("Health potion", { "MAX HP", 10 }, 5);
+	Potion pt2("Breaking up", { "BR", 10 }, 10);
+	vector<Potion> ptar = { pt1, pt2 };
+	vector<Potion> ptar2 = { pt1, pt1, pt2 };
+
+	ASSERT_ANY_THROW(test.setPotion(ptar2));
+	test.setPotion(ptar);
+	ASSERT_EQ(test.getPotion().size(), 2);
+	EXPECT_EQ(test.getPotion()[0].getName(), "Health potion");
+	EXPECT_EQ(test.getPotion()[1].getName(), "Breaking up");
+}
+
 TEST(HeroGetters, getPartArmor)
 {
 	Hero test;
+	Armor defhelmet("Default Helmet", "Helmet", 7);
 
 	EXPECT_EQ(test.getPartArmor("Head"), nullptr);
+	test.setArmor(&defhelmet);
+	EXPECT_EQ(test.getPartArmor("Head")->getName(), "Default Helmet");
+}
 
+TEST(HeroGetters, getAllCharacter)
+{
+	Hero test;
+	ASSERT_EQ(test.getAllCharacter().size(), 7);
+}
+
+TEST(HeroGetters, getOneCharac)
+{
+	Hero test;
+
+	ASSERT_EQ(test.getOneCharac("STAM"), MAXSTAM);
+	ASSERT_EQ(test.getOneCharac("HP"), MAXHP);
+	ASSERT_EQ(test.getOneCharac("BR"), INITCH);
+}
+
+TEST(HeroGetters, getCharNum)
+{
+	Hero test;
+	ASSERT_EQ(test.getCharNum(), 7);
+}
+
+TEST(HeroGetters, getHP)
+{
+	Hero test;
+	ASSERT_EQ(test.getHP(), MAXHP);
+}
+
+TEST(HeroGetters, getMaxHP)
+{
+	Hero test;
+	ASSERT_EQ(test.getMaxHP(), MAXHP);
+}
+
+TEST(HeroGetters, getDMG)
+{
+	Hero test;
+	Weapon wp;
+
+	ASSERT_EQ(test.getDMG(), 5);
+	test.setWeapon(&wp);
+	ASSERT_LE(test.getDMG(), wp.getMaxDmg());
+	ASSERT_GE(test.getDMG(), wp.getMinDmg());
+}
+
+TEST(HeroGetters, getDEF)
+{
+	Hero test;
+	Armor defhelmet("Default Helmet", "Helmet", 7);
+
+	ASSERT_GE(test.getDEF(), 0);
+	test.setArmor(&defhelmet);
+	ASSERT_GE(test.getDEF(), 7);
+}
+
+TEST(HeroGetters, getArmor)
+{
+	Hero test;
+	ASSERT_EQ(test.getArmor().size(), 5);
+}
+
+TEST(HeroGetters, getWeapon)
+{
+	Hero test;
+	EXPECT_EQ(test.getWeapon(), nullptr);
+
+	Weapon wp;
+	test.setWeapon(&wp);
+	ASSERT_EQ(test.getWeapon()->getName(), "Wooden sword");
+}
+
+TEST(HeroGetters, getPotion)
+{
+	Hero test;
+	ASSERT_EQ(test.getPotion().size(), 0);
+
+	Potion pt1("Health potion", {"MAX HP", 10}, 5);
+	Potion pt2("Breaking up", { "BR", 10 }, 10);
+	vector<Potion> ptar = { pt1, pt2 };
+
+	test.setPotion(ptar);
+	ASSERT_EQ(test.getPotion().size(), 2);
+}
+
+TEST(HeroGetters, getCurPt)
+{
+	Hero test;
+	ASSERT_EQ(test.getCurPt(), 0);
+
+	Potion pt1("Health potion", { "MAX HP", 10 }, 5);
+	Potion pt2("Breaking up", { "BR", 10 }, 10);
+
+	test.setPotion(pt1);
+	ASSERT_EQ(test.getCurPt(), 1);
+
+	test.setPotion(pt2);
+	ASSERT_EQ(test.getCurPt(), 2);
+}
+
+TEST(HeroGetters, getMaxPt)
+{
+	Hero test;
+
+	ASSERT_EQ(test.getMaxPt(), 2);
+
+	test.setMaxPt(5);
+	ASSERT_EQ(test.getMaxPt(), 5);
+}
+
+TEST(HeroGetters, getMasterKey)
+{
+	Hero test;
+	
+	ASSERT_EQ(test.getMasterKey(), 0);
+
+	test.setMasterKey(2);
+	ASSERT_EQ(test.getMasterKey(), 2);
 }

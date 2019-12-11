@@ -2,18 +2,17 @@
 #include "../RogueLib/Hero.h"
 #include "../RogueLib/Dungeon.h"
 using namespace Prog4_Rogue;
-/*
-Weapon loot_weap_test;
-vector<vector<Square>> lvl1 = {
-	{Square(),Square(&loot_weap_test), Square()},
-	{Square(), Square(S_Wall), Door()},
-	{Chest(), Square(S_Wall), Stair(downwards, 2, 2)} };
 
 TEST(TestMove, setPosition) {
+	Weapon loot_weap_test;
+	vector<vector<Square*>> lvl1 = {
+		{new Square(), new Square(&loot_weap_test), new Square()},
+		{new Square(), new Square(S_Wall), new Door()},
+		{new Chest(), new Square(S_Wall), new Stair(downwards, 2, 2)} };
 	Hero play;
 	Floor test_fl(1, lvl1);
 	Dungeon test_dg(&play, test_fl);
-	Coordinates wp1 = { 1, 0 }; //
+	//Coordinates wp1 = { 1, 0 }; //
 	Coordinates fl1 = { 0, 1 }; //
 	Coordinates st1 = { 2, 2 }; //
 	Coordinates ch1 = { 0, 2 }; //
@@ -26,13 +25,12 @@ TEST(TestMove, setPosition) {
 	ASSERT_ANY_THROW(play.setPosition(wl1, test_dg));
 	ASSERT_EQ(play.getPosition().x, fl1.x);
 	ASSERT_EQ(play.getPosition().y, fl1.y);
-	ASSERT_ANY_THROW(play.setPosition(dr1, test_dg));
 	play.setPosition(dr1, test_dg);
 	ASSERT_EQ(play.getPosition().x, dr1.x);
 	ASSERT_EQ(play.getPosition().y, dr1.y);
-	play.setPosition(wp1, test_dg);
+	/*play.setPosition(wp1, test_dg);
 	ASSERT_EQ(play.getPosition().x, wp1.x);
-	ASSERT_EQ(play.getPosition().y, wp1.y);
+	ASSERT_EQ(play.getPosition().y, wp1.y);*/
 	play.setPosition(ch1, test_dg);
 	ASSERT_EQ(play.getPosition().x, ch1.x);
 	ASSERT_EQ(play.getPosition().y, ch1.y);
@@ -41,6 +39,10 @@ TEST(TestMove, setPosition) {
 
 TEST(TestGo, goLeft)
 {
+	vector<vector<Square*>> lvl1 = {
+		{new Square(), new Square(), new Square()},
+		{new Square(), new Square(S_Wall), new Door()},
+		{new Chest(), new Square(S_Wall), new Stair(downwards, 2, 2)} };
 	Hero play;
 	Floor test_fl(1, lvl1);
 	Dungeon test_dg(&play, test_fl);
@@ -49,12 +51,16 @@ TEST(TestGo, goLeft)
 	ASSERT_ANY_THROW(play.goLeft(test_dg));
 	play.setCoordinates(test_c);
 	play.goLeft(test_dg);
-	ASSERT_EQ(play.getPosition().x, test_c.x);
-	ASSERT_EQ(play.getPosition().y, test_c.y);
+	ASSERT_EQ(play.getPosition().x, 0);
+	ASSERT_EQ(play.getPosition().y, 0);
 }
 
 TEST(TestGo, goRight)
 {
+	vector<vector<Square*>> lvl1 = {
+		{new Square(), new Square(), new Square()},
+		{new Square(), new Square(S_Wall), new Door()},
+		{new Chest(), new Square(S_Wall), new Stair(downwards, 2, 2)} };
 	Hero play;
 	Floor test_fl(1, lvl1);
 	Dungeon test_dg(&play, test_fl);
@@ -69,6 +75,10 @@ TEST(TestGo, goRight)
 
 TEST(TestGo, goUp)
 {
+	vector<vector<Square*>> lvl1 = {
+		{new Square(), new Square(), new Square()},
+		{new Square(), new Square(S_Wall), new Door()},
+		{new Chest(), new Square(S_Wall), new Stair(downwards, 2, 2)} };
 	Hero play;
 	Floor test_fl(1, lvl1);
 	Dungeon test_dg(&play, test_fl);
@@ -83,6 +93,11 @@ TEST(TestGo, goUp)
 
 TEST(TestGo, goDown)
 {
+	Weapon loot_weap_test;
+	vector<vector<Square*>> lvl1 = {
+		{new Square(), new Square(&loot_weap_test), new Square()},
+		{new Square(), new Square(S_Wall), new Door()},
+		{new Chest(), new Square(S_Wall), new Stair(downwards, 2, 2)} };
 	Hero play;
 	Floor test_fl(1, lvl1);
 	Dungeon test_dg(&play, test_fl);
@@ -97,6 +112,10 @@ TEST(TestGo, goDown)
 
 TEST(TestMove, move)
 {
+	vector<vector<Square*>> lvl1 = {
+		{new Square(), new Square(), new Square()},
+		{new Square(), new Square(S_Wall), new Door()},
+		{new Chest(), new Square(S_Wall), new Stair(downwards, 2, 2)} };
 	Hero play;
 	Floor test_fl(1, lvl1);
 	Dungeon test_dg(&play, test_fl);
@@ -107,19 +126,19 @@ TEST(TestMove, move)
 	ASSERT_ANY_THROW(play.move(1, test_dg));
 	ASSERT_ANY_THROW(play.move(37, test_dg));
 
-	play.move(38, test_dg); //UP
+	play.move(72, test_dg); //UP
 	ASSERT_EQ(play.getPosition().x, y1.x);
 	ASSERT_EQ(play.getPosition().y, y1.y);
 
-	play.move(40, test_dg); //DOWN
+	play.move(80, test_dg); //DOWN
 	ASSERT_EQ(play.getPosition().x, xy.x);
 	ASSERT_EQ(play.getPosition().y, xy.y);
 
-	play.move(39, test_dg); //RIGHT
+	play.move(77, test_dg); //RIGHT
 	ASSERT_EQ(play.getPosition().x, x1.x);
 	ASSERT_EQ(play.getPosition().y, x1.y);
 
-	play.move(37, test_dg); //LEFT
+	play.move(75, test_dg); //LEFT
 	ASSERT_EQ(play.getPosition().x, xy.x);
 	ASSERT_EQ(play.getPosition().y, xy.y);
-}*/
+}

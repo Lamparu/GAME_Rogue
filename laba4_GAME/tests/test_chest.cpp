@@ -65,7 +65,7 @@ TEST(ChestGetters, getLoot)
 {
 	Chest test;
 	EXPECT_EQ(test.getLoot(), nullptr);
-	
+
 	Weapon wp;
 	Chest test1(3, &wp);
 	ASSERT_EQ(test1.getLoot()->getID(), O_Weapon);

@@ -6,10 +6,10 @@ using namespace Prog4_Rogue;
 TEST(FloorConstructors, OnlySquares)
 {
 	Weapon loot_wp;
-	vector<vector<Square>> lvl1 = {
-	{Square(),Square(&loot_wp), Square()},
-	{Square(), Square(S_Wall), Door()},
-	{Chest(), Square(S_Wall), Square()} };
+	vector<vector<Square*>> lvl1 = {
+	{new Square(), new Square(&loot_wp), new Square()},
+	{new Square(), new Square(S_Wall), new Door()},
+	{new Chest(), new Square(S_Wall), new Square()} };
 
 	Floor test(1, lvl1);
 

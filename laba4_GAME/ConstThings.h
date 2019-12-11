@@ -26,7 +26,7 @@ namespace Prog4_Rogue {
 
 	static const char *NAME_DEFAULT = "IVAN";
 
-	static const string shrt_char[] = { "AG", "BR","HP", "MAX HP",  "MAX STAM", "STAM", "STR"};
+	static const string shrt_char[] = { "AG", "BR", "HP", "MAX HP",  "MAX STAM", "STAM", "STR"};
 	static const string lng_char[] = { "Agility", "Breaking", "HealthPoint", "Max HealthPoint", "Max Stamina", "Stamina", "Strength" };
 	static const map <string, string> chars = { {"AG", "Agility"}, {"BR", "Breaking"}, {"HP", "HealthPoint"}, {"MAX HP", "Max HealthPoint"}, {"MAX STAM", "Max Stamina"}, {"STAM", "Stamina"}, {"STR", "Strength"} };
 	static const int Nchar = sizeof(shrt_char) / sizeof(shrt_char[0]);

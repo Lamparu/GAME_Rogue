@@ -48,6 +48,7 @@ Enemy & Enemy::setType(string str)
 	{
 		throw std::exception("Error. Wrong enemy type.");
 	}
+	type = str;
 	return *this;
 }
 
@@ -106,7 +107,7 @@ Enemy & Enemy::hurted(const Hero &hero)
 {
 	int curhp = getCurHP();
 	int dmg = hero.getDMG(); //дамаг от героя
-	if (hero.getWeapon()->getEnchant().size() != 0)
+	if (hero.getWeapon() != nullptr && hero.getWeapon()->getEnchant().size() != 0)
 	{
 		auto plusit = hero.getWeapon()->getEnchant().find(type);
 		if (plusit != hero.getWeapon()->getEnchant().end())

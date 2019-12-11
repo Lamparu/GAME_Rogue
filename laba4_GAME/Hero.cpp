@@ -52,7 +52,7 @@ Hero & Hero::setHP(int n)
 		throw std::exception("Negative HP.");
 	auto it = charac.find("MAX HP");
 	if (it->second.second < n)
-		throw std::exception("MAX HP id less.");
+		throw std::exception("MAX HP is less.");
 	charac.find("HP")->second.second = n;
 	return *this;
 }
@@ -116,7 +116,7 @@ Hero & Hero::setPotion(Potion ptnew)
 Hero & Hero::setPotion(vector<Potion> ptnew)
 {
 	if (getCurPt() + ptnew.size() > getMaxPt())
-		throw std::exception("You have max amount of potions");
+		throw std::exception("Too many potions to add");
 	std::for_each(ptnew.begin(), ptnew.end(), [this](Potion cur)
 	{
 		pt.push_back(cur);
@@ -186,7 +186,10 @@ Hero & Hero::getItem(Object *loot) //можно переделать под массив функций
 			Weapon *lwp = dynamic_cast<Weapon*>(loot);
 			compare(lwp, getWeapon());
 			if (chooseWpArm())
+			{
 				setWeapon(lwp);
+				std::cout << "You got new weapon!" << std::endl;
+			}
 			else
 				loot = nullptr;
 		}
@@ -195,7 +198,10 @@ Hero & Hero::getItem(Object *loot) //можно переделать под массив функций
 			Armor *lwp = dynamic_cast<Armor*>(loot);
 			compare(lwp, getArmor());
 			if (chooseWpArm())
+			{
 				setArmor(lwp);
+				std::cout << "You got new armor!" << std::endl;
+			}
 			else
 				loot = nullptr;
 		}
@@ -266,21 +272,33 @@ int Hero::getDMG() const
 		if (it != stats.end())
 			stam += it->second;
 	}
-	double bonusstam = stam * 0.2; //чета с флоат сделать 
-	int bonusstr = str * 5;
-	int d = wp->getDmg();
-	d = d + bonusstr + bonusstam;
+	float bonusstam = stam * 0.2; //чета с флоат сделать 
+	float bonusstr = str * 0.5;
+	float d = wp->getDmg()*0.8;
+	d = (int)d + (int)bonusstr + (int)bonusstam;
+	if (d > wp->getMaxDmg())
+		return wp->getMaxDmg();
 	return d;
 }
 
 int Hero::getDEF() const
 {
-	//def
-	//agility
-	//stamina
-	//strength
-	int d = ar.find("Body")->second->getDef();
-	return d;
+	float res = 0;
+	int n = 0;
+	for (auto it = ar.begin(); it != ar.end(); ++it)
+	{
+		if (it->second != nullptr)
+		{
+			++n;
+			res += it->second->getDef();
+		}
+	}
+	if (n != 0)
+		res = res / n;
+	res += charac.find("AG")->second.second * 0.2;
+	res += charac.find("STR")->second.second * 0.2;
+	res += charac.find("STAM")->second.second*0.2;
+	return res;
 }
 
 int Hero::getMasterKey() const
@@ -325,8 +343,8 @@ Hero & Hero::hurted(const Enemy &en)
 		setHP(0);
 		throw std::exception("DEAD");
 	}
-	if (curhp - dmg + def >= 0)
-		setHP(curhp - 2);
+	if (curhp - dmg + def >= getHP())
+		setHP(curhp - 4);
 	else
 		setHP(curhp - dmg + def);
 	return *this;
@@ -557,7 +575,7 @@ std::ostream & Prog4_Rogue::operator <<(std::ostream &s, const Hero & hero)
 
 Hero & Hero::setPosition(Coordinates ncoord, Dungeon& dung)
 {
-	if (ncoord.x < 0 || ncoord.y < 0 || ncoord.x >= MAX_X || ncoord.y >= MAX_Y)
+	if (ncoord.x < 0 || ncoord.y < 0 || ncoord.x >= dung.getFloors()[dung.getCurFloor()].getSquares().size() || ncoord.y >= dung.getFloors()[dung.getCurFloor()].getSquares().size())
 		throw std::exception("Out of map");
 	int cfl = dung.getCurFloor();
 	//Square *nsq = &(dung.getFloors()[cfl].getSquares()[ncoord.y][ncoord.x]);
@@ -609,9 +627,8 @@ Hero & Hero::setPosition(Coordinates ncoord, Dungeon& dung)
 	{
 		if (nsq->getLoot() != nullptr)
 			getItem(nsq->getLoot());
-		nsq->setType(S_Floor);
+		//nsq->setType(S_Floor);
 		dung.getFChange().getSChange(ncoord.x, ncoord.y).setType(S_Floor);
-		std::cout << "You got loot!" << std::endl;
 	}
 	setCoordinates(ncoord);
 	return *this;
@@ -629,9 +646,13 @@ Hero & Hero::updatePotion()
 				it->setTime(it->getTime() - 1);
 		}
 	}
-	for (auto it = pt.begin(); it != pt.end(); ++it)
-		if (it->getTime() == 0)
-			pt.erase(it);
+	for (auto pcur = pt.begin(); pcur != pt.end(); ++pcur)
+		if (pcur->getTime() == 0)
+		{
+			for (auto potion_ch = pcur->getCharac().begin(); potion_ch != pcur->getCharac().end(); ++potion_ch)
+				charac.find(potion_ch->first)->second.second -= potion_ch->second;
+			pt.erase(pcur);
+		}
 	return *this;
 }
 

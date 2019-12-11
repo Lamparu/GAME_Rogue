@@ -53,7 +53,7 @@ TEST(SquareSetters, setLoot)
 	Weapon wpt;
 	MasterKey mkt(2);
 	Armor art("Test gloves", "Gloves", 10);
-	Potion ptt("HP potion", {"HP", 20}, 5);
+	Potion ptt("HP potion", { "HP", 20 }, 5);
 	ArtifactArmor artart("Art helmet", "Helmet", 11, { "HP",  6 });
 	ArtifactWeapon artwpt("Enchanced artifact", 15, 19, { "STR", 3 }, { "Golem", 8 });
 

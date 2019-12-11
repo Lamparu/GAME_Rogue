@@ -6,20 +6,20 @@ using namespace Prog4_Rogue;
 //test lvl
 
 Weapon loot_wp("Enchanced usual", 10, 15, { "Wolf", 5 });
-vector<vector<Square>> lvl1 = {
-	{Square(),Square(&loot_wp), Square()},
-	{Square(), Square(S_Wall), Door()},
-	{Chest(), Square(S_Wall), Square()} };
+vector<vector<Square*>> lvl1 = {
+	{new Square(), new Square(&loot_wp), new  Square()},
+	{new Square(), new  Square(S_Wall), new Door()},
+	{new Chest(), new Square(S_Wall), new Square()} };
 
-vector<vector<Square>> lvl2 = {
-	{Square(),Square(), Stair(downwards, 2, 0)},
-	{Square(), Square(), Square()},
-	{Square(), Square(), Square(&loot_wp)} };
+vector<vector<Square*>> lvl2 = {
+	{new Square(), new Square(), new Stair(downwards, 2, 0)},
+	{new Square(), new Square(), new Square()},
+	{new Square(), new Square(), new Square(&loot_wp)} };
 
-vector<vector<Square>> lvl3 = {
-	{Square(),Square(), Stair(upwards, 2, 0)},
-	{Square(S_Wall), Door(),  Square(S_Wall)},
-	{Square(), Chest(), Square()} };
+vector<vector<Square*>> lvl3 = {
+	{new Square(), new Square(), new Stair(upwards, 2, 0)},
+	{new Square(S_Wall), new Door(), new Square(S_Wall)},
+	{new Square(), new Chest(), new Square()} };
 
 
 TEST(DungeonConstructors, ConstructorOne) {
@@ -94,8 +94,13 @@ TEST(DungeonSetters, setCurFloor)
 	vector<Floor> test_fl = { test_fl1, test_fl2 };
 	Dungeon test_dg(&play, test_fl);
 
-	test_dg.setCurFloor(2);
-	ASSERT_EQ(test_dg.getCurFloor(), 2);
+	ASSERT_ANY_THROW(test_dg.setCurFloor(10));
+	ASSERT_ANY_THROW(test_dg.setCurFloor(-5));
+
+	test_dg.setCurFloor(1);
+	ASSERT_EQ(test_dg.getCurFloor(), 1);
+	test_dg.setCurFloor(0);
+	ASSERT_EQ(test_dg.getCurFloor(), 0);
 }
 
 TEST(DungeonSetters, setCurFloorExc)
@@ -176,6 +181,6 @@ TEST(DungeonGetters, getCurFloorMany)
 	vector<Floor> test_fl = { test_fl1, test_fl2 };
 	Dungeon test_dg(&play, test_fl);
 
-	test_dg.setCurFloor(2);
-	ASSERT_EQ(test_dg.getCurFloor(), 2);
+	test_dg.setCurFloor(1);
+	ASSERT_EQ(test_dg.getCurFloor(), 1);
 }
